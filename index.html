@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>WhisperQueue</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .pulse-1 { animation: pulse 4s infinite; }
+    .pulse-2 { animation: pulse 3s infinite; }
+    .pulse-3 { animation: pulse 2s infinite; }
+    .pulse-4 { animation: pulse 1.5s infinite; }
+    .pulse-5 { animation: pulse 1s infinite; }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.8; }
+      50% { transform: scale(1.1); opacity: 1; }
+    }
+  </style>
+</head>
+<body class="bg-neutral-900 text-white min-h-screen flex flex-col items-center justify-center p-6">
+  <h1 class="text-2xl font-bold mb-6">WhisperQueue</h1>
+  <div id="taskBoard" class="grid grid-cols-3 gap-6 max-w-2xl">
+    <!-- Tasks added here dynamically -->
+  </div>
+
+  <button onclick="addTask()" class="mt-8 px-4 py-2 bg-blue-600 rounded">+ Add Task</button>
+
+  <script>
+    const icons = [
+      '🌀', '🔥', '🌿', '🪐', '🔺', '🧩', '🌕', '🌊', '⚙️', '🔮'
+    ]
+
+    function addTask() {
+      const icon = icons[Math.floor(Math.random() * icons.length)]
+      const level = Math.ceil(Math.random() * 5)
+
+      const div = document.createElement('div')
+      div.className = `text-4xl text-center p-4 rounded-lg bg-white/10 hover:bg-white/20 cursor-pointer pulse-${level}`
+      div.textContent = icon
+      div.dataset.status = 'new'
+
+      div.onclick = () => {
+        const states = ['new', 'progress', 'done']
+        const next = states[(states.indexOf(div.dataset.status) + 1) % 3]
+        div.dataset.status = next
+
+        if (next === 'progress') div.classList.add('ring-2', 'ring-blue-500')
+        else if (next === 'done') div.classList.add('opacity-30', 'line-through')
+        else div.classList.remove('ring-2', 'opacity-30', 'line-through')
+      }
+
+      document.getElementById('taskBoard').appendChild(div)
+    }
+
+    // preload 3
+    addTask(); addTask(); addTask();
+  </script>
+</body>
+</html>
